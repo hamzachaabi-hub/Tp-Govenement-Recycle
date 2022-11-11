@@ -6,8 +6,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.tprecycle.databinding.CardCellBinding
 
 
-class CardAdapter (private val Govs: List<Gov>,private val clickListener: GovClickListener): RecyclerView.Adapter<CardViewHolder>()
+public class CardAdapter (private val Govs: List<Gov>,private val clickListener: GovClickListener): RecyclerView.Adapter<CardViewHolder>()
 {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder
     {
         val from = LayoutInflater.from(parent.context)
@@ -21,4 +22,13 @@ class CardAdapter (private val Govs: List<Gov>,private val clickListener: GovCli
     }
 
     override fun getItemCount(): Int = Govs.size
+
+    fun deleteItem(pos : Int){
+        GovList.removeAt(pos)
+        notifyItemRemoved(pos)
+    }
+    public fun  update(){
+        notifyDataSetChanged()
+    }
 }
+

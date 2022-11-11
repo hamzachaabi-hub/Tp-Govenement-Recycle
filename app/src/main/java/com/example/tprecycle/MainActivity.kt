@@ -1,34 +1,65 @@
 package com.example.tprecycle
 
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
+import android.widget.CheckBox
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.tprecycle.databinding.ActivityMainBinding
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.card_cell.*
+
 
 class MainActivity : AppCompatActivity(),GovClickListener {
 
+    lateinit var idFABAdd: FloatingActionButton
     private lateinit var binding: ActivityMainBinding
+    private lateinit var MyAddapter: CardAdapter
+
+    var Remove = false
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        idFABAdd = findViewById(R.id.idFABAdd)
+
         populateGOV()
 
+
         val mainActivity = this
+        MyAddapter=  CardAdapter(GovList, mainActivity)
         binding.recyclerView.apply {
             layoutManager = GridLayoutManager(applicationContext, 3)
-            adapter = CardAdapter(GovList, mainActivity)
+            adapter = MyAddapter
+
+        idFABAdd.setOnClickListener {
+            idFABAdd.isSelected != idFABAdd.isSelected
+            Remove=!Remove
+            if (Remove){
+
+                idFABAdd.setImageResource(R.drawable.ic_delete)
+            }
         }
+        }
+
     }
+
+
 
     override fun onClick(Gov: Gov)
     {
-        val intent = Intent(applicationContext, DetailActivity::class.java)
-        intent.putExtra(GOV_ID_EXTRA, Gov.id)
-        startActivity(intent)
+        if (Remove){
+            GovList.remove(Gov)
+            MyAddapter.notifyDataSetChanged()
+        }else {
+            val intent = Intent(applicationContext, DetailActivity::class.java)
+            intent.putExtra(GOV_ID_EXTRA, Gov.id)
+            startActivity(intent)
+        }
     }
 
     private fun populateGOV() {
